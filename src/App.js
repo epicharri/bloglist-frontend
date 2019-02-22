@@ -22,6 +22,19 @@ const App = () => {
     setErrorMessage
   ] = useState("")
 
+  const [
+    blogTitle,
+    setBlogTitle
+  ] = useState("")
+  const [
+    blogAuthor,
+    setBlogAuthor
+  ] = useState("")
+  const [
+    blogUrl,
+    setBlogUrl
+  ] = useState("")
+
   useEffect(() => {
     blogService
       .getAll()
@@ -67,20 +80,63 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-    }}
-
-    const handleLogout = async event => {
-      event.preventDefault()
-      window.localStorage.removeItem(
-        "loggedBlogappUser"
-      )
-      setUser(null)
-      setUsername("")
-      setPassword("")
     }
-  
+  }
 
-  const blogForm = () => (
+  const handleLogout = async event => {
+    event.preventDefault()
+    window.localStorage.removeItem(
+      "loggedBlogappUser"
+    )
+    setUser(null)
+    setUsername("")
+    setPassword("")
+  }
+
+  const handleSendBlog = async event => {
+    event.preventDefault()
+    console.log(
+      "title, author, url",
+      blogTitle,
+      blogAuthor,
+      blogUrl
+    )
+    const blogObject = {
+      title: blogTitle,
+      author: blogAuthor,
+      url: blogUrl
+    }
+    blogService.setToken(user.token)
+    /*
+      blogService
+        .create(blogObject).then(returnedBlog => {
+          setBlogs(blogs.concat(returnedBlog))
+          setBlogAuthor('')
+          setBlogTitle('')
+          setBlogUrl('')
+        })
+      }
+*/
+
+    try {
+      const blog = await blogService.create(
+        blogObject
+      )
+      setBlogs(blogs.concat(blog))
+      setBlogAuthor("")
+      setBlogTitle("")
+      setBlogUrl("")
+    } catch (exception) {
+      setErrorMessage(
+        "Blogin lähetys ei onnistunut."
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const blogList = () => (
     <div>
       {blogs.map(blog => (
         <Blog
@@ -127,6 +183,47 @@ const App = () => {
     </form>
   )
 
+  const blogForm = () => (
+    <form onSubmit={handleSendBlog}>
+      <div>
+        Title
+        <input
+          type="text"
+          value={blogTitle}
+          name="Title"
+          onChange={({ target }) =>
+            setBlogTitle(target.value)
+          }
+        />
+      </div>
+      <div>
+        Author
+        <input
+          type="text"
+          value={blogAuthor}
+          name="Author"
+          onChange={({ target }) =>
+            setBlogAuthor(target.value)
+          }
+        />
+      </div>
+      <div>
+        Url
+        <input
+          type="url"
+          value={blogUrl}
+          name="Url"
+          onChange={({ target }) =>
+            setBlogUrl(target.value)
+          }
+        />
+      </div>
+      <button type="submit">
+        Tallenna
+      </button>
+    </form>
+  )
+
   return (
     <div>
       <h2>Blogs</h2>
@@ -138,6 +235,7 @@ const App = () => {
           <p>{user.name} logged in</p>
           {logoutButton()}
           {blogForm()}
+          {blogList()}
         </div>
       )}
     </div>
