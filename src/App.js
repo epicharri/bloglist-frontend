@@ -35,6 +35,11 @@ const App = () => {
     setBlogUrl
   ] = useState("")
 
+  const [
+    blogFormVisible,
+    setBlogFormVisible
+  ] = useState(false)
+
   useEffect(() => {
     blogService
       .getAll()
@@ -183,46 +188,93 @@ const App = () => {
     </form>
   )
 
-  const blogForm = () => (
-    <form onSubmit={handleSendBlog}>
+  const blogForm = () => {
+    const hideWhenVisible = {
+      display: blogFormVisible
+        ? "none"
+        : ""
+    }
+    const showWhenVisible = {
+      display: blogFormVisible
+        ? ""
+        : "none"
+    }
+
+    return (
       <div>
-        Title
-        <input
-          type="text"
-          value={blogTitle}
-          name="Title"
-          onChange={({ target }) =>
-            setBlogTitle(target.value)
-          }
-        />
+        <div style={hideWhenVisible}>
+          <button
+            onClick={() =>
+              setBlogFormVisible(true)
+            }
+          >
+            Näytä bloginlisäys
+          </button>
+        </div>
+        <div style={showWhenVisible}>
+          <button
+            onClick={() =>
+              setBlogFormVisible(false)
+            }
+          >
+            Piilota bloginlisäys
+          </button>
+          <form
+            onSubmit={handleSendBlog}
+          >
+            <div>
+              Title
+              <input
+                type="text"
+                value={blogTitle}
+                name="Title"
+                onChange={({
+                  target
+                }) =>
+                  setBlogTitle(
+                    target.value
+                  )
+                }
+              />
+            </div>
+            <div>
+              Author
+              <input
+                type="text"
+                value={blogAuthor}
+                name="Author"
+                onChange={({
+                  target
+                }) =>
+                  setBlogAuthor(
+                    target.value
+                  )
+                }
+              />
+            </div>
+            <div>
+              Url
+              <input
+                type="url"
+                value={blogUrl}
+                name="Url"
+                onChange={({
+                  target
+                }) =>
+                  setBlogUrl(
+                    target.value
+                  )
+                }
+              />
+            </div>
+            <button type="submit">
+              Tallenna
+            </button>
+          </form>
+        </div>
       </div>
-      <div>
-        Author
-        <input
-          type="text"
-          value={blogAuthor}
-          name="Author"
-          onChange={({ target }) =>
-            setBlogAuthor(target.value)
-          }
-        />
-      </div>
-      <div>
-        Url
-        <input
-          type="url"
-          value={blogUrl}
-          name="Url"
-          onChange={({ target }) =>
-            setBlogUrl(target.value)
-          }
-        />
-      </div>
-      <button type="submit">
-        Tallenna
-      </button>
-    </form>
-  )
+    )
+  }
 
   return (
     <div>
