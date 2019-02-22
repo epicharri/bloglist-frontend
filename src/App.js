@@ -28,6 +28,19 @@ const App = () => {
       .then(blogs => setBlogs(blogs))
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem(
+      "loggedBlogappUser"
+    )
+    if (loggedUserJSON) {
+      const user = JSON.parse(
+        loggedUserJSON
+      )
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
   const handleLogin = async event => {
     event.preventDefault()
     try {
@@ -37,6 +50,12 @@ const App = () => {
           password
         }
       )
+
+      window.localStorage.setItem(
+        "loggedBlogappUser",
+        JSON.stringify(user)
+      )
+      blogService.setToken(user.token)
 
       setUser(user)
       setUsername("")
@@ -48,8 +67,18 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
+    }}
+
+    const handleLogout = async event => {
+      event.preventDefault()
+      window.localStorage.removeItem(
+        "loggedBlogappUser"
+      )
+      setUser(null)
+      setUsername("")
+      setPassword("")
     }
-  }
+  
 
   const blogForm = () => (
     <div>
@@ -60,6 +89,12 @@ const App = () => {
         />
       ))}
     </div>
+  )
+
+  const logoutButton = () => (
+    <button onClick={handleLogout}>
+      Kirjaudu ulos
+    </button>
   )
 
   const loginForm = () => (
@@ -87,7 +122,7 @@ const App = () => {
         />
       </div>
       <button type="submit">
-        kirjaudu
+        Kirjaudu
       </button>
     </form>
   )
@@ -96,13 +131,15 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
 
-      {user === null ?
-      loginForm() :
-      <div>
-        <p>{user.name} logged in</p>
-        {blogForm()}
-      </div>
-    }
+      {user === null ? (
+        loginForm()
+      ) : (
+        <div>
+          <p>{user.name} logged in</p>
+          {logoutButton()}
+          {blogForm()}
+        </div>
+      )}
     </div>
   )
 }
