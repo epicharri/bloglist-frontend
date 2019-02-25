@@ -63,6 +63,42 @@ const Blog = ({ blog, setBlogs, blogs }) => {
     }
   }
 
+  const handleDeleteBlog = async event => {
+    event.preventDefault()
+    console.log("painettu poista blogi")
+    const id = event.target.value //Että teen errormessagen tän avul
+    const loggedUserJSON = window.localStorage.getItem(
+      "loggedBlogappUser"
+    )
+    if (loggedUserJSON) {
+      const user = JSON.parse(
+        loggedUserJSON
+      )
+      //setUser(user)
+      blogService.setToken(user.token)
+    }
+
+    //blogService.setToken(user.token)
+
+    try {
+      await blogService.deleteBlog(
+        blog.id
+      )
+      setBlogs(blogs.filter(b => (b.id !== id) && b).sort(
+        (x, y) => {return y.likes - x.likes}
+      ))
+    } catch (exception) {
+      console.log('Deletointi ei onnistunut :(')
+      /*setErrorMessage(
+        "Liken päivittäminen ei onnistunut."
+      )*/
+      setTimeout(() => {
+        /* setErrorMessage(null)*/
+      }, 5000)
+    }
+  }
+
+
   return (
     <div>
       <button
@@ -85,6 +121,7 @@ const Blog = ({ blog, setBlogs, blogs }) => {
           Like
         </button>
         <p>Lisännyt {blog.user.name}</p>
+        <button onClick={handleDeleteBlog} value={blog.id}>Poista blogi</button>
       </div>
     </div>
   )
