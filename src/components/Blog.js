@@ -2,13 +2,18 @@ import React, { useState } from "react"
 import blogService from "../services/blogs"
 
 //import '../App.css'
-const Blog = ({ blog, setBlogs, blogs }) => {
+const Blog = ({
+  blog,
+  setBlogs,
+  blogs,
+  user
+}) => {
   const [
     blogExpanded,
     setBlogExpanded
   ] = useState("content")
 
-  
+
 
   const display = () => {
     return blogExpanded
@@ -23,7 +28,7 @@ const Blog = ({ blog, setBlogs, blogs }) => {
   const handleLikeBlog = async () => {
     //event.preventDefault()
     console.log("liketetty")
-/*
+    /*
     const loggedUserJSON = window.localStorage.getItem(
       "loggedBlogappUser"
     )
@@ -50,9 +55,17 @@ const Blog = ({ blog, setBlogs, blogs }) => {
         blog.id,
         blogObject
       )
-      setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b).sort(
-        (x, y) => {return y.likes - x.likes}
-      ))
+      setBlogs(
+        blogs
+          .map(b =>
+            b.id === blog.id
+              ? updatedBlog
+              : b
+          )
+          .sort((x, y) => {
+            return y.likes - x.likes
+          })
+      )
     } catch (exception) {
       /*setErrorMessage(
         "Liken päivittäminen ei onnistunut."
@@ -64,9 +77,14 @@ const Blog = ({ blog, setBlogs, blogs }) => {
   }
 
   const handleDeleteBlog = async event => {
+    const saaPoistaa = window.confirm(
+      "Haluatko oikeesti poistaa tän!!??"
+    )
+    if (!saaPoistaa) return
     event.preventDefault()
     console.log("painettu poista blogi")
     const id = event.target.value //Että teen errormessagen tän avul
+
     const loggedUserJSON = window.localStorage.getItem(
       "loggedBlogappUser"
     )
@@ -78,17 +96,25 @@ const Blog = ({ blog, setBlogs, blogs }) => {
       blogService.setToken(user.token)
     }
 
+  
+
     //blogService.setToken(user.token)
 
     try {
       await blogService.deleteBlog(
         blog.id
       )
-      setBlogs(blogs.filter(b => (b.id !== id) && b).sort(
-        (x, y) => {return y.likes - x.likes}
-      ))
+      setBlogs(
+        blogs
+          .filter(b => b.id !== id && b)
+          .sort((x, y) => {
+            return y.likes - x.likes
+          })
+      )
     } catch (exception) {
-      console.log('Deletointi ei onnistunut :(')
+      console.log(
+        "Deletointi ei onnistunut :("
+      )
       /*setErrorMessage(
         "Liken päivittäminen ei onnistunut."
       )*/
@@ -98,6 +124,8 @@ const Blog = ({ blog, setBlogs, blogs }) => {
     }
   }
 
+  console.log('blog.user.id on ', blog.user.id)
+  console.log('user on ',user)
 
   return (
     <div>
@@ -121,7 +149,16 @@ const Blog = ({ blog, setBlogs, blogs }) => {
           Like
         </button>
         <p>Lisännyt {blog.user.name}</p>
-        <button onClick={handleDeleteBlog} value={blog.id}>Poista blogi</button>
+        {blog.user.name === user.name ? (
+          <button
+            onClick={handleDeleteBlog}
+            value={blog.id}
+          >
+            Poista blogi
+          </button>
+        ) : (
+          <p />
+        )}
       </div>
     </div>
   )
