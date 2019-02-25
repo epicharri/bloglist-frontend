@@ -20,10 +20,10 @@ const Blog = ({ blog, setBlogs, blogs }) => {
     else setBlogExpanded("content")
   }
 
-  const handleLikeBlog = async event => {
-    event.preventDefault()
+  const handleLikeBlog = async () => {
+    //event.preventDefault()
     console.log("liketetty")
-
+/*
     const loggedUserJSON = window.localStorage.getItem(
       "loggedBlogappUser"
     )
@@ -34,7 +34,7 @@ const Blog = ({ blog, setBlogs, blogs }) => {
       //setUser(user)
       blogService.setToken(user.token)
     }
-
+*/
     //blogService.setToken(user.token)
 
     const blogObject = {
@@ -50,7 +50,7 @@ const Blog = ({ blog, setBlogs, blogs }) => {
         blog.id,
         blogObject
       )
-      setBlogs(blogs.map(b => b.id === blog.id ? blogObject : b).sort(
+      setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b).sort(
         (x, y) => {return y.likes - x.likes}
       ))
     } catch (exception) {
