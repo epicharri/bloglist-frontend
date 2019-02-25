@@ -169,7 +169,7 @@ const Blog = ({
 
 Blog.propTypes = {
   blog: PropTypes.object,
-  setBlogs: PropTypes.object,
+  setBlogs: PropTypes.func,
   blogs: PropTypes.array,
   user: PropTypes.object
 }
