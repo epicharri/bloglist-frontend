@@ -7,17 +7,25 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
+import { useField } from './hooks'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+
+  const username = useField('text')
+  const password = useField('password')
+  
+  /*
   const [
     username,
     setUsername
   ] = useState('')
+  
   const [
     password,
     setPassword
   ] = useState('')
+  */
   const [user, setUser] = useState(null)
   const [
     errorMessage,
@@ -72,11 +80,15 @@ const App = () => {
 
   const handleLogin = async event => {
     event.preventDefault()
+    console.log(username.value)
+    console.log(password.value)
+
     try {
+
       const user = await loginService.login(
         {
-          username,
-          password
+          username: username.value,
+          password: password.value
         }
       )
 
@@ -87,8 +99,10 @@ const App = () => {
       blogService.setToken(user.token)
 
       setUser(user)
-      setUsername('')
-      setPassword('')
+      username.value=''
+      password.value=''
+      //setUsername('')
+      //setPassword('')
     } catch (exception) {
       setErrorMessage(
         'käyttäjätunnus tai salasana virheellinen'
@@ -105,8 +119,9 @@ const App = () => {
       'loggedBlogappUser'
     )
     setUser(null)
-    setUsername('')
-    setPassword('')
+    username.value=''
+    password.value=''
+    // setPassword('')
   }
 
   const handleSendBlog = async event => {
@@ -163,28 +178,23 @@ const App = () => {
     </button>
   )
 
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
-        käyttäjätunnus
+        Käyttäjätunnus
         <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) =>
-            setUsername(target.value)
-          }
+          type={username.type}
+          value={username.value}
+          onChange={username.onChange}
         />
       </div>
       <div>
-        salasana
+        Salasana
         <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) =>
-            setPassword(target.value)
-          }
+          type={password.type}
+          value={password.value}
+          onChange={password.onChange}
         />
       </div>
       <button type="submit">
