@@ -3,6 +3,7 @@ import React, {
   useEffect
 } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
@@ -283,6 +284,7 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification message={errorMessage} />
 
       {user === null ? (
         loginForm()
