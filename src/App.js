@@ -1,10 +1,10 @@
 import React, {
   useState,
   useEffect
-} from "react"
-import Blog from "./components/Blog"
-import blogService from "./services/blogs"
-import loginService from "./services/login"
+} from 'react'
+import Blog from './components/Blog'
+import blogService from './services/blogs'
+import loginService from './services/login'
 import './App.css'
 
 const App = () => {
@@ -12,51 +12,53 @@ const App = () => {
   const [
     username,
     setUsername
-  ] = useState("")
+  ] = useState('')
   const [
     password,
     setPassword
-  ] = useState("")
+  ] = useState('')
   const [user, setUser] = useState(null)
   const [
     errorMessage,
     setErrorMessage
-  ] = useState("")
+  ] = useState('')
 
   const [
     blogTitle,
     setBlogTitle
-  ] = useState("")
+  ] = useState('')
   const [
     blogAuthor,
     setBlogAuthor
-  ] = useState("")
+  ] = useState('')
   const [
     blogUrl,
     setBlogUrl
-  ] = useState("")
+  ] = useState('')
 
   const [
     blogFormVisible,
     setBlogFormVisible
   ] = useState(false)
-/*
+  /*
   const [
     blogExpanded,
     setBlogExpanded
   ] = useState(-1)
 */
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(blogs => setBlogs(blogs.sort(
-        (x, y) => {return y.likes - x.likes}
-      )))
+    blogService.getAll().then(blogs =>
+      setBlogs(
+        blogs.sort((x, y) => {
+          return y.likes - x.likes
+        })
+      )
+    )
   }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(
-      "loggedBlogappUser"
+      'loggedBlogappUser'
     )
     if (loggedUserJSON) {
       const user = JSON.parse(
@@ -78,17 +80,17 @@ const App = () => {
       )
 
       window.localStorage.setItem(
-        "loggedBlogappUser",
+        'loggedBlogappUser',
         JSON.stringify(user)
       )
       blogService.setToken(user.token)
 
       setUser(user)
-      setUsername("")
-      setPassword("")
+      setUsername('')
+      setPassword('')
     } catch (exception) {
       setErrorMessage(
-        "käyttäjätunnus tai salasana virheellinen"
+        'käyttäjätunnus tai salasana virheellinen'
       )
       setTimeout(() => {
         setErrorMessage(null)
@@ -99,21 +101,17 @@ const App = () => {
   const handleLogout = async event => {
     event.preventDefault()
     window.localStorage.removeItem(
-      "loggedBlogappUser"
+      'loggedBlogappUser'
     )
     setUser(null)
-    setUsername("")
-    setPassword("")
+    setUsername('')
+    setPassword('')
   }
-
-
-
-
 
   const handleSendBlog = async event => {
     event.preventDefault()
     console.log(
-      "title, author, url",
+      'title, author, url',
       blogTitle,
       blogAuthor,
       blogUrl
@@ -130,12 +128,12 @@ const App = () => {
         blogObject
       )
       setBlogs(blogs.concat(blog))
-      setBlogAuthor("")
-      setBlogTitle("")
-      setBlogUrl("")
+      setBlogAuthor('')
+      setBlogTitle('')
+      setBlogUrl('')
     } catch (exception) {
       setErrorMessage(
-        "Blogin lähetys ei onnistunut."
+        'Blogin lähetys ei onnistunut.'
       )
       setTimeout(() => {
         setErrorMessage(null)
@@ -154,8 +152,7 @@ const App = () => {
           user={user}
           //expanded={blogExpanded}
         />
-      ))
-      }
+      ))}
     </div>
   )
 
@@ -198,13 +195,13 @@ const App = () => {
   const blogForm = () => {
     const hideWhenVisible = {
       display: blogFormVisible
-        ? "none"
-        : ""
+        ? 'none'
+        : ''
     }
     const showWhenVisible = {
       display: blogFormVisible
-        ? ""
-        : "none"
+        ? ''
+        : 'none'
     }
 
     return (

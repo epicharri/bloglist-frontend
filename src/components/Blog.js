@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import blogService from "../services/blogs"
+import React, { useState } from 'react'
+import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
 //import '../App.css'
@@ -9,32 +9,26 @@ const Blog = ({
   blogs,
   user
 }) => {
-
   console.log('blog', blog.PropTypes)
-
-
-
 
   const [
     blogExpanded,
     setBlogExpanded
-  ] = useState("content")
-
-
+  ] = useState('content')
 
   const display = () => {
     return blogExpanded
   }
 
   const toggleExpansion = () => {
-    if (blogExpanded === "content")
-      setBlogExpanded("contentVisible")
-    else setBlogExpanded("content")
+    if (blogExpanded === 'content')
+      setBlogExpanded('contentVisible')
+    else setBlogExpanded('content')
   }
 
   const handleLikeBlog = async () => {
     //event.preventDefault()
-    console.log("liketetty")
+    console.log('liketetty')
     /*
     const loggedUserJSON = window.localStorage.getItem(
       "loggedBlogappUser"
@@ -85,15 +79,15 @@ const Blog = ({
 
   const handleDeleteBlog = async event => {
     const saaPoistaa = window.confirm(
-      "Haluatko oikeesti poistaa tän!!??"
+      'Haluatko oikeesti poistaa tän!!??'
     )
     if (!saaPoistaa) return
     event.preventDefault()
-    console.log("painettu poista blogi")
+    console.log('painettu poista blogi')
     const id = event.target.value //Että teen errormessagen tän avul
 
     const loggedUserJSON = window.localStorage.getItem(
-      "loggedBlogappUser"
+      'loggedBlogappUser'
     )
     if (loggedUserJSON) {
       const user = JSON.parse(
@@ -102,8 +96,6 @@ const Blog = ({
       //setUser(user)
       blogService.setToken(user.token)
     }
-
-  
 
     //blogService.setToken(user.token)
 
@@ -120,7 +112,7 @@ const Blog = ({
       )
     } catch (exception) {
       console.log(
-        "Deletointi ei onnistunut :("
+        'Deletointi ei onnistunut :('
       )
       /*setErrorMessage(
         "Liken päivittäminen ei onnistunut."
@@ -131,8 +123,11 @@ const Blog = ({
     }
   }
 
-  console.log('blog.user.id on ', blog.user.id)
-  console.log('user on ',user)
+  console.log(
+    'blog.user.id on ',
+    blog.user.id
+  )
+  console.log('user on ', user)
 
   return (
     <div>
@@ -156,16 +151,17 @@ const Blog = ({
           Like
         </button>
         <p>Lisännyt {blog.user.name}</p>
-        {blog.user.name === user.name ? (
-          <button
-            onClick={handleDeleteBlog}
-            value={blog.id}
-          >
+        {blog.user.name ===
+        user.name ? (
+            <button
+              onClick={handleDeleteBlog}
+              value={blog.id}
+            >
             Poista blogi
-          </button>
-        ) : (
-          <p />
-        )}
+            </button>
+          ) : (
+            <p />
+          )}
       </div>
     </div>
   )
