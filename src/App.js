@@ -49,7 +49,9 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll()
-      .then(blogs => setBlogs(blogs))
+      .then(blogs => setBlogs(blogs.sort(
+        (x, y) => {return y.likes - x.likes}
+      )))
   }, [])
 
   useEffect(() => {
@@ -104,6 +106,10 @@ const App = () => {
     setPassword("")
   }
 
+
+
+
+
   const handleSendBlog = async event => {
     event.preventDefault()
     console.log(
@@ -118,16 +124,6 @@ const App = () => {
       url: blogUrl
     }
     blogService.setToken(user.token)
-    /*
-      blogService
-        .create(blogObject).then(returnedBlog => {
-          setBlogs(blogs.concat(returnedBlog))
-          setBlogAuthor('')
-          setBlogTitle('')
-          setBlogUrl('')
-        })
-      }
-*/
 
     try {
       const blog = await blogService.create(
@@ -153,9 +149,12 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
+          blogs={blogs}
+          setBlogs={setBlogs}
           //expanded={blogExpanded}
         />
-      ))}
+      ))
+      }
     </div>
   )
 
