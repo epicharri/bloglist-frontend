@@ -6,6 +6,7 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import userService from './services/users'
 import './App.css'
 import { useField } from './hooks'
 import Userit from './components/Userit'
@@ -18,19 +19,22 @@ const App = () => {
 
   const username = useField('text')
   const password = useField('password')
-  
+
   /*
   const [
     username,
     setUsername
   ] = useState('')
-  
+
   const [
     password,
     setPassword
   ] = useState('')
   */
   const [user, setUser] = useState(null)
+  const [users, setUsers] = useState(
+    []
+  )
   const [
     errorMessage,
     setErrorMessage
@@ -70,6 +74,12 @@ const App = () => {
   }, [])
 
   useEffect(() => {
+    userService
+      .getAll()
+      .then(users => setUsers(users))
+  }, [])
+
+  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem(
       'loggedBlogappUser'
     )
@@ -88,7 +98,6 @@ const App = () => {
     console.log(password.value)
 
     try {
-
       const user = await loginService.login(
         {
           username: username.value,
@@ -103,8 +112,8 @@ const App = () => {
       blogService.setToken(user.token)
 
       setUser(user)
-      username.value=''
-      password.value=''
+      username.value = ''
+      password.value = ''
       //setUsername('')
       //setPassword('')
     } catch (exception) {
@@ -123,8 +132,8 @@ const App = () => {
       'loggedBlogappUser'
     )
     setUser(null)
-    username.value=''
-    password.value=''
+    username.value = ''
+    password.value = ''
     // setPassword('')
   }
 
@@ -176,12 +185,31 @@ const App = () => {
     </div>
   )
 
+  const userList = () => {
+    return (
+      <div>
+        <h1>Käyttäjät</h1>
+        <h3>
+          Käyttäjä ja luotujen blogien
+          määrä
+        </h3>
+        {users.map(user => {
+          return (
+            <p key={user.id}>
+              {user.name}{' '}
+              {user.blogs.length}
+            </p>
+          )
+        })}
+      </div>
+    )
+  }
+
   const logoutButton = () => (
     <button onClick={handleLogout}>
       Kirjaudu ulos
     </button>
   )
-
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -298,7 +326,9 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
-      <Notification message={errorMessage} />
+      <Notification
+        message={errorMessage}
+      />
 
       {user === null ? (
         loginForm()
@@ -308,7 +338,7 @@ const App = () => {
           {logoutButton()}
           {blogForm()}
           {blogList()}
-
+          {userList()}
         </div>
       )}
     </div>
