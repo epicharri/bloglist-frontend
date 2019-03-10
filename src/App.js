@@ -31,10 +31,18 @@ const App = () => {
     setPassword
   ] = useState('')
   */
-  const [user, setUser] = useState(null)
-  const [users, setUsers] = useState(
-    []
+  const [page, setPage] = useState(
+    'home'
   )
+  const content = () => {
+    if (page === 'home') {
+      return <>{blogList()}</>
+    } else if (page === 'users') {
+      return <>{userList()}</>
+    }
+  }
+  const [user, setUser] = useState(null)
+  const [users, setUsers] = useState([])
   const [
     errorMessage,
     setErrorMessage
@@ -57,6 +65,11 @@ const App = () => {
     blogFormVisible,
     setBlogFormVisible
   ] = useState(false)
+
+  const toPage = page => event => {
+    event.preventDefault()
+    setPage(page)
+  }
   /*
   const [
     blogExpanded,
@@ -211,6 +224,11 @@ const App = () => {
     </button>
   )
 
+  const padding = {
+    padding: 5,
+    color: '#ffffff'
+  }
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -335,10 +353,31 @@ const App = () => {
       ) : (
         <div>
           <p>{user.name} logged in</p>
+          <div>
+            <div>
+              <a
+                href=""
+                onClick={toPage('home')}
+                style={padding}
+              >
+                Näytä blogilista
+              </a>
+              <a
+                href=""
+                onClick={toPage(
+                  'users'
+                )}
+                style={padding}
+              >
+                Näytä käyttäjät
+              </a>
+            </div>
+          </div>
+          <br></br>
           {logoutButton()}
+          <br></br>
           {blogForm()}
-          {blogList()}
-          {userList()}
+          {content()}
         </div>
       )}
     </div>
