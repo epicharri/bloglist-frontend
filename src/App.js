@@ -8,8 +8,12 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
 import { useField } from './hooks'
+import Userit from './components/Userit'
+import 'typeface-roboto'
+import './index.css'
 
 const App = () => {
+  console.log('Ollaan appissa nyt sit')
   const [blogs, setBlogs] = useState([])
 
   const username = useField('text')
@@ -304,6 +308,7 @@ const App = () => {
           {logoutButton()}
           {blogForm()}
           {blogList()}
+
         </div>
       )}
     </div>
